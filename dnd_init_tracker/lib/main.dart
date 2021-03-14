@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import "db.dart" as db;
 
 void main() {
   runApp(MyApp());
@@ -12,7 +13,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'D&D InitTracker',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primaryColor: Colors.red[800],
+        brightness: Brightness.dark,
+        buttonTheme: ButtonThemeData(),
       ),
       home: homeScreen,
     );
@@ -29,24 +32,42 @@ class _InitListState extends State<InitList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("D&D Init Tracker"),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.delete), onPressed: listHandler.deleteList),
-        ],
-      ),
-      body: _buildCharList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => {
-          setState(() {
-            _addChar();
-          })
-        },
-        tooltip: "Neuen Charakter einfügen",
-        child: const Icon(Icons.add),
-      ),
-    );
+        appBar: AppBar(
+          title: Text("D&D Init Tracker"),
+          actions: [
+            IconButton(
+                icon: Icon(Icons.delete), onPressed: listHandler.deleteList),
+          ],
+        ),
+        body: _buildCharList(),
+        floatingActionButton: Container(
+          child: Row(
+            children: [
+              Spacer(flex: 1),
+              FloatingActionButton.extended(
+                  onPressed: () => {
+                        setState(() {
+                          listHandler.next();
+                        })
+                      },
+                  heroTag: null,
+                  label: const Text("Nächste Runde")),
+              Spacer(
+                flex: 6,
+              ),
+              FloatingActionButton(
+                onPressed: () => {
+                  setState(() {
+                    _addChar();
+                  })
+                },
+                tooltip: "Neuen Charakter einfügen",
+                child: const Icon(Icons.add),
+                heroTag: null,
+              ),
+            ],
+          ),
+        ));
   }
 
   Widget _buildCharList() {
@@ -64,7 +85,7 @@ class _InitListState extends State<InitList> {
     }
   }
 
-  Widget _buildRow(Char char) {
+  Widget _buildRow(db.Char char) {
     return ListTile(
       title: Text(char.name),
       subtitle: Text(char.init.toString()),
@@ -83,36 +104,6 @@ class _InitListState extends State<InitList> {
     }));
     setState(() {});
   }
-}
-
-class Char {
-  String name;
-  int init;
-
-  Char(String name, int init) {
-    this.name = name;
-    this.init = init;
-  }
-}
-
-class Char2 {
-  String name;
-  int initiative;
-  bool blinded;
-  bool charmed;
-  bool deafend;
-  bool frightend;
-  bool grappled;
-  bool incapacitated;
-  bool invisible;
-  bool paralyzed;
-  bool petrified;
-  bool poisoned;
-  bool prone;
-  bool restrained;
-  bool stunned;
-  bool unconscious;
-  int exhaustion;
 }
 
 class MyCustomForm extends StatefulWidget {
@@ -169,18 +160,18 @@ class MyCustomFormState extends State<MyCustomForm> {
 }
 
 class CharListHandler {
-  List<Char> _charList;
+  List<db.Char> _charList;
 
   CharListHandler() {
     this._charList = [];
   }
 
   void addChar(String name, int init) {
-    _charList.add(Char(name, init));
+    _charList.add(db.Char(name, init));
     _sortList();
   }
 
-  List<Char> getList() {
+  List<db.Char> getList() {
     return _charList;
   }
 
@@ -192,7 +183,7 @@ class CharListHandler {
   }
 
   void deleteList() {
-    _charList = <Char>[];
+    _charList = <db.Char>[];
   }
 
   void _sortList() {
