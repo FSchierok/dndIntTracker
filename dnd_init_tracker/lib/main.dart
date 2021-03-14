@@ -7,6 +7,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final InitList homeScreen = InitList();
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -14,8 +15,9 @@ class MyApp extends StatelessWidget {
       title: 'D&D InitTracker',
       theme: ThemeData(
         primaryColor: Colors.red[800],
+        accentColor: Colors.red[800],
+        buttonColor: Colors.red[800],
         brightness: Brightness.dark,
-        buttonTheme: ButtonThemeData(),
       ),
       home: homeScreen,
     );
@@ -36,7 +38,12 @@ class _InitListState extends State<InitList> {
           title: Text("D&D Init Tracker"),
           actions: [
             IconButton(
-                icon: Icon(Icons.delete), onPressed: listHandler.deleteList),
+                icon: Icon(Icons.delete),
+                onPressed: () => {
+                      setState(() {
+                        listHandler.deleteList();
+                      })
+                    }),
           ],
         ),
         body: _buildCharList(),
@@ -89,6 +96,12 @@ class _InitListState extends State<InitList> {
     return ListTile(
       title: Text(char.name),
       subtitle: Text(char.init.toString()),
+      trailing: Icon(Icons.remove_circle),
+      onLongPress: () => {
+        setState(() {
+          listHandler.removeChar(char);
+        })
+      },
     );
   }
 
@@ -96,11 +109,13 @@ class _InitListState extends State<InitList> {
     final _ = await Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (BuildContext context) {
       return Scaffold(
-        appBar: AppBar(
-          title: Text("Neuen Charakter einfügen"),
-        ),
-        body: MyCustomForm(listHandler),
-      );
+          appBar: AppBar(
+            title: Text("Neuen Charakter einfügen"),
+          ),
+          body: Container(
+            padding: EdgeInsets.all(64),
+            child: MyCustomForm(listHandler),
+          ));
     }));
     setState(() {});
   }
@@ -118,12 +133,18 @@ class MyCustomForm extends StatefulWidget {
 
 class MyCustomFormState extends State<MyCustomForm> {
   CharListHandler handler;
+  final nameFieldContoller = TextEditingController();
+  final initFieldContoller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var name = "";
-  var init = 0;
+  var init = 0.0;
 
   MyCustomFormState(CharListHandler myHandler) {
     handler = myHandler;
+  }
+  void clearText() {
+    nameFieldContoller.clear();
+    initFieldContoller.clear();
   }
 
   @override
@@ -136,19 +157,26 @@ class MyCustomFormState extends State<MyCustomForm> {
             onSaved: (String value) {
               name = value;
             },
+            controller: nameFieldContoller,
+            decoration: InputDecoration(hintText: "Name"),
           ),
           TextFormField(
             onSaved: (String value) {
-              init = int.parse(value);
+              init = double.parse(value.replaceAll(",", "."));
             },
+            controller: initFieldContoller,
+            decoration: InputDecoration(hintText: "Initiative"),
+            keyboardType: TextInputType.number,
           ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton(
+              style: ElevatedButton.styleFrom(primary: Colors.red[800]),
               onPressed: () {
                 _formKey.currentState.save();
                 ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text(name + " hinzugefügt")));
+                this.clearText();
                 handler.addChar(name, init);
               },
               child: Text("Hinzufügen"),
@@ -166,7 +194,7 @@ class CharListHandler {
     this._charList = [];
   }
 
-  void addChar(String name, int init) {
+  void addChar(String name, double init) {
     _charList.add(db.Char(name, init));
     _sortList();
   }
@@ -200,6 +228,10 @@ class CharListHandler {
 
   int getLength() {
     return _charList.length;
+  }
+
+  void removeChar(db.Char char) {
+    _charList.remove(char);
   }
 }
 // TODO: init = init *100

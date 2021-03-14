@@ -1,8 +1,8 @@
 class Char {
   String name;
-  int init;
+  double init;
 
-  Char(String name, int init) {
+  Char(String name, double init) {
     this.name = name;
     this.init = init;
   }
