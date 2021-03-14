@@ -25,7 +25,7 @@ class InitList extends StatefulWidget {
 }
 
 class _InitListState extends State<InitList> {
-  final listHandler = CharListHandler();
+  final listHandler = new CharListHandler();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,8 +130,8 @@ class MyCustomFormState extends State<MyCustomForm> {
   var name = "";
   var init = 0;
 
-  MyCustomFormState(CharListHandler handler) {
-    handler = handler;
+  MyCustomFormState(CharListHandler myHandler) {
+    handler = myHandler;
   }
 
   @override
@@ -168,10 +168,15 @@ class MyCustomFormState extends State<MyCustomForm> {
 }
 
 class CharListHandler {
-  var _charList = <Char>[];
+  List<Char> _charList;
+
+  CharListHandler() {
+    this._charList = [];
+  }
 
   void addChar(String name, int init) {
     _charList.add(Char(name, init));
+    _sortList();
   }
 
   List<Char> getList() {
@@ -189,7 +194,7 @@ class CharListHandler {
     _charList = <Char>[];
   }
 
-  List<Char> _sortList() {
+  void _sortList() {
     final currentInit = _charList[0].init;
     _charList.sort((a, b) => a.init.compareTo(b.init));
     while (_charList[0].init != currentInit) {
