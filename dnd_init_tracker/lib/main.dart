@@ -40,7 +40,7 @@ class _InitListState extends State<InitList> {
       floatingActionButton: FloatingActionButton(
         onPressed: () => {
           setState(() {
-            _addChar1();
+            _addChar();
           })
         },
         tooltip: "Neuen Charakter einfügen",
@@ -71,8 +71,8 @@ class _InitListState extends State<InitList> {
     );
   }
 
-  void _addChar1() {
-    Navigator.of(context)
+  void _addChar() async {
+    final _ = await Navigator.of(context)
         .push(MaterialPageRoute<void>(builder: (BuildContext context) {
       return Scaffold(
         appBar: AppBar(
@@ -81,6 +81,7 @@ class _InitListState extends State<InitList> {
         body: MyCustomForm(listHandler),
       );
     }));
+    setState(() {});
   }
 }
 
