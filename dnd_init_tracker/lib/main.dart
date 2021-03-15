@@ -58,7 +58,7 @@ class _InitListState extends State<InitList> {
                         })
                       },
                   heroTag: null,
-                  label: const Text("Nächste Runde")),
+                  label: const Text("Weiter")),
               Spacer(
                 flex: 6,
               ),
@@ -234,4 +234,3 @@ class CharListHandler {
     _charList.remove(char);
   }
 }
-// TODO: init = init *100
