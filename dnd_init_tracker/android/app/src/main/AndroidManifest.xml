@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.dnd_init_tracker">
    <application
-        android:label="D&amp;fluD InitTracker"
+        android:label="D&amp;D InitTracker"
         android:icon="@mipmap/launcher_icon">
         <activity
             android:name=".MainActivity"
