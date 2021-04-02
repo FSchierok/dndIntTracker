@@ -4,6 +4,7 @@ class Char {
   bool incapacitated = false;
   int maxHp;
   int hp;
+  String note = "";
 
   Char(String name, int init, int maxHp) {
     this.name = name;
@@ -30,5 +31,9 @@ class Char {
     if (incapacitated) {
       incapacitated = false;
     }
+  }
+
+  void editNote(String newNote) {
+    this.note = newNote;
   }
 }

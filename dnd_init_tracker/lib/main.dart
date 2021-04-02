@@ -95,6 +95,9 @@ class _InitListState extends State<InitList> {
   Widget _buildRow(db.Char char) {
     final dmgFieldController = TextEditingController();
     final noteFieldController = TextEditingController();
+    if (char.note != "") {
+      noteFieldController.text = char.note;
+    }
     int dmg = 0;
     return Card(
       child: Column(
@@ -132,16 +135,26 @@ class _InitListState extends State<InitList> {
                           dmgFieldController.clear();
                         }))
               ]),
-              subtitle: Wrap(children: <Widget>[
-                Text("Init: " +
-                    char.init.toString() +
-                    " Trefferpunkte: " +
-                    char.hp.toString()),
-                Spacer(),
-                Expanded(
-                  child: TextField(),
-                ),
-              ]),
+              subtitle: Column(
+                children: <Widget>[
+                  Text("Init: " +
+                      char.init.toString() +
+                      " Trefferpunkte: " +
+                      char.hp.toString()),
+                  //Expanded(
+                  //child:
+                  TextField(
+                    decoration: InputDecoration(
+                        hintText: (char.note == "")
+                            ? "Platz für Notizen"
+                            : char.note),
+                    controller: noteFieldController,
+                    maxLines: null,
+                    onChanged: (String newNote) => {char.editNote(newNote)},
+                  ),
+                  //),
+                ],
+              ),
               trailing: IconButton(
                 onPressed: () => {
                   setState(() {
