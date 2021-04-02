@@ -93,9 +93,8 @@ class _InitListState extends State<InitList> {
   }
 
   Widget _buildRow(db.Char char) {
-    const double iconHeight = 32;
-    const int iconShade = 850;
     final dmgFieldController = TextEditingController();
+    final noteFieldController = TextEditingController();
     int dmg = 0;
     return Card(
       child: Column(
@@ -133,10 +132,16 @@ class _InitListState extends State<InitList> {
                           dmgFieldController.clear();
                         }))
               ]),
-              subtitle: Text("Init: " +
-                  char.init.toString() +
-                  " Trefferpunkte: " +
-                  char.hp.toString()),
+              subtitle: Wrap(children: <Widget>[
+                Text("Init: " +
+                    char.init.toString() +
+                    " Trefferpunkte: " +
+                    char.hp.toString()),
+                Spacer(),
+                Expanded(
+                  child: TextField(),
+                ),
+              ]),
               trailing: IconButton(
                 onPressed: () => {
                   setState(() {
@@ -145,166 +150,6 @@ class _InitListState extends State<InitList> {
                 },
                 icon: Icon(Icons.delete_outline),
               )),
-          Wrap(
-            children: [
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalBlinded.png",
-                  height: iconHeight,
-                  color: !char.blinded ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.blinded = !char.blinded;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/Charmed.png",
-                  height: iconHeight,
-                  color: !char.charmed ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.charmed = !char.charmed;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalDeafened.png",
-                  height: iconHeight,
-                  color: !char.deafend ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.deafend = !char.deafend;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/Frightened.png",
-                  height: iconHeight,
-                  color: !char.frightend ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.frightend = !char.frightend;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalGrappled.png",
-                  height: iconHeight,
-                  color: !char.grappled ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.grappled = !char.grappled;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalInvisible.png",
-                  height: iconHeight,
-                  color: !char.invisible ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.invisible = !char.invisible;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalParalyzed.png",
-                  height: iconHeight,
-                  color: !char.paralyzed ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.paralyzed = !char.paralyzed;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalPetrified.png",
-                  height: iconHeight,
-                  color: !char.petrified ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.petrified = !char.petrified;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalPoisoned.png",
-                  height: iconHeight,
-                  color: !char.poisoned ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.poisoned = !char.poisoned;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalProne.png",
-                  height: iconHeight,
-                  color: !char.prone ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.prone = !char.prone;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalRestrained.png",
-                  height: iconHeight,
-                  color: !char.restrained ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.restrained = !char.restrained;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/FinalStunned.png",
-                  height: iconHeight,
-                  color: !char.stunned ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.stunned = !char.stunned;
-                  })
-                },
-              ),
-              IconButton(
-                icon: Image.asset(
-                  "assets/Unconcious.png",
-                  height: iconHeight,
-                  color: !char.unconscious ? Colors.grey[iconShade] : null,
-                ),
-                onPressed: () => {
-                  setState(() {
-                    char.unconscious = !char.unconscious;
-                  })
-                },
-              ),
-            ],
-          ),
         ],
       ),
     );
@@ -343,8 +188,9 @@ class CharCreatorFormState extends State<CharCreatorForm> {
   final maxHpFieldController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   var name = "";
-  var init = 0.0;
+  int init = 0;
   int maxHp = 0;
+  int number = 1;
 
   CharCreatorFormState(CharListHandler myHandler) {
     handler = myHandler;
@@ -370,7 +216,7 @@ class CharCreatorFormState extends State<CharCreatorForm> {
           ),
           TextFormField(
             onSaved: (String value) {
-              init = double.parse(value.replaceAll(",", "."));
+              init = int.parse(value);
             },
             controller: initFieldContoller,
             decoration: InputDecoration(hintText: "Initiative"),
@@ -384,16 +230,33 @@ class CharCreatorFormState extends State<CharCreatorForm> {
             decoration: InputDecoration(hintText: "Lebenspunkte"),
             keyboardType: TextInputType.number,
           ),
+          DropdownButtonFormField<int>(
+            onSaved: (int value) {
+              number = value;
+            },
+            onChanged: (int newValue) {
+              setState(() {
+                number = newValue;
+              });
+            },
+            value: number,
+            items: <int>[for (var i = 1; i < 50; i += 1) i]
+                .map<DropdownMenuItem<int>>((int value) {
+              return DropdownMenuItem<int>(
+                  value: value, child: Text(value.toString()));
+            }).toList(),
+          ),
           Padding(
             padding: const EdgeInsets.all(16),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(primary: Colors.red[800]),
               onPressed: () {
                 _formKey.currentState.save();
-                ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text(name + " hinzugefügt")));
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    content: Text(
+                        name + " " + number.toString() + "mal hinzugefügt")));
                 this.clearText();
-                handler.addChar(name, init, maxHp);
+                handler.addChar(name, init, maxHp, number);
               },
               child: Text("Hinzufügen"),
             ),
@@ -410,8 +273,14 @@ class CharListHandler {
     this._charList = [];
   }
 
-  void addChar(String name, double init, int maxHp) {
-    _charList.add(db.Char(name, init, maxHp));
+  void addChar(String name, int init, int maxHp, int number) {
+    if (number == 1) {
+      _charList.add(db.Char(name, init, maxHp));
+    } else {
+      for (var i = 1; i <= number; i += 1) {
+        _charList.add(db.Char(name + i.toString(), init, maxHp));
+      }
+    }
     _sortList();
   }
 
