@@ -432,7 +432,7 @@ class CharListHandler {
 
   void _sortList() {
     final currentInit = _charList[0].init;
-    _charList.sort((a, b) => a.init.compareTo(b.init));
+    _charList.sort((a, b) => b.init.compareTo(a.init));
     while (_charList[0].init != currentInit) {
       this.next();
     }
