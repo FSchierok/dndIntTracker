@@ -1,37 +1,12 @@
-import 'package:flutter/material.dart';
-
-class Char2 {
-  String name;
-  double init;
-
-  Char(String name, double init) {
-    this.name = name;
-    this.init = init;
-  }
-}
-
 class Char {
   String name;
-  double init;
-  bool blinded = false;
-  bool charmed = false;
-  bool deafend = false;
-  bool frightend = false;
-  bool grappled = false;
+  int init;
   bool incapacitated = false;
-  bool invisible = false;
-  bool paralyzed = false;
-  bool petrified = false;
-  bool poisoned = false;
-  bool prone = false;
-  bool restrained = false;
-  bool stunned = false;
-  bool unconscious = false;
-  int exhaustion = 0;
   int maxHp;
   int hp;
+  String note = "";
 
-  Char(String name, double init, int maxHp) {
+  Char(String name, int init, int maxHp) {
     this.name = name;
     this.init = init;
     this.maxHp = maxHp;
@@ -56,5 +31,9 @@ class Char {
     if (incapacitated) {
       incapacitated = false;
     }
+  }
+
+  void editNote(String newNote) {
+    this.note = newNote;
   }
 }
